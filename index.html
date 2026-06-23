@@ -160,6 +160,26 @@
   .subjob .sp{font-size:8.5px;color:var(--muted);font-weight:600;white-space:nowrap;flex:none;}
 
   .cline a{color:inherit;text-decoration:none;}
+
+  /* ============ SCREEN RESPONSIVE (no afecta a la impresión) ============ */
+  @media screen{
+    body{
+      background:radial-gradient(1100px 620px at 50% -8%,#23264a 0%,#101223 55%,#0a0b14 100%);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:clamp(12px,3vw,44px);
+    }
+    /* La hoja A4 se presenta como un documento centrado; el script ajusta el zoom al ancho */
+    .sheet{
+      box-shadow:0 30px 80px -22px rgba(0,0,0,.6),0 10px 26px rgba(0,0,0,.35);
+      border-radius:14px;
+    }
+  }
+  @media print{
+    .sheet{zoom:1 !important;box-shadow:none !important;border-radius:0 !important;}
+  }
 </style>
 </head>
 <body>
@@ -332,5 +352,33 @@
     </section>
   </main>
 </div>
+<script>
+/* Ajusta el "zoom" de la hoja A4 al ancho disponible: crece en pantallas anchas
+   (hasta 1.5x) y se reduce en estrechas para que nunca haya scroll horizontal.
+   No se aplica al imprimir (lo neutraliza @media print). */
+(function(){
+  var sheet=document.querySelector('.sheet');
+  if(!sheet) return;
+  var MAX=1.5;
+  function fit(){
+    if(window.matchMedia&&window.matchMedia('print').matches){sheet.style.zoom='';return;}
+    sheet.style.zoom='1';
+    var natW=sheet.offsetWidth;
+    var body=sheet.parentElement, cs=getComputedStyle(body);
+    var avail=body.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);
+    var scale=avail/natW;
+    if(scale>MAX) scale=MAX;
+    sheet.style.zoom=scale;
+  }
+  fit();
+  window.addEventListener('resize',fit);
+  window.addEventListener('load',fit);
+  if(window.matchMedia){
+    var mq=window.matchMedia('print');
+    if(mq.addEventListener) mq.addEventListener('change',fit);
+    else if(mq.addListener) mq.addListener(fit);
+  }
+})();
+</script>
 </body>
 </html>
