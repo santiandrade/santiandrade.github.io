@@ -218,7 +218,11 @@
   .project-meta{font-size:9px;font-weight:600;color:#697386;margin-bottom:5px;}
   .project ul.pts li{font-size:10.2px;line-height:1.4;margin-bottom:3px;}
   .project-tech{font-size:8.8px;font-weight:600;color:#6550ad;margin-top:5px;}
-  @media screen{body{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:28px;}.sheet{margin:0;}}
+  @media screen{body{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:28px;}.sheet{margin:0;}
+    /* The sheet keeps overflow visible, so decorative layers follow its rounded corners themselves.
+       The ribbon is drawn 14px tall with full-size radii and clipped back to 6px, keeping the same curve as the sheet. */
+    .ribbon{height:14px;border-radius:14px 14px 0 0;clip-path:inset(0 0 8px 0);}
+    .side-bg{border-radius:14px 0 0 14px;}}
   @media print{
     body{display:block;padding:0;background:white;}
     .role{background:none;color:var(--accent);-webkit-text-fill-color:var(--accent);}
